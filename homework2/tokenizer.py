@@ -24,7 +24,8 @@ def set_tokenizer_result(result):
 
 
 def tokenizer(html):
-    page_content = BeautifulSoup(html).get_text()
+    pc = BeautifulSoup(html)
+    page_content = pc.get_text(separator=" ")
     result = list(nltk.wordpunct_tokenize(page_content))
     result = minus_sign_prep(result)
     result = list(filter(minus_incorrect_symbol, result))
@@ -39,10 +40,6 @@ def minus_incorrect_symbol(word):
     rus = re.compile(r'^[а-яА-Я]{2,}$')
     stop_words = stopwords.words('russian')
     numbers = re.compile(r'^[0-9]+$')
-    # signs = re.compile()
-    # print(word.lower)
-    # if (bool(word.lower() in stop_words)):
-    #     print(word.lower())
     res = bool(word.lower() in stop_words) or bool(numbers.match(word)) or not bool(rus.match(word))
     return not res
 
@@ -78,7 +75,7 @@ def set_lemmatizer_res(lemmatizer_res):
 
 
 if __name__ == '__main__':
-    zip = zipfile.ZipFile('vykachka.zip', 'r')
+    zip = zipfile.ZipFile('../homework1/vykachka.zip', 'r')
     tokenizer_res = set()
     for f in zip.filelist:
         page_html = read_file(zip, f.filename)
@@ -88,8 +85,3 @@ if __name__ == '__main__':
     set_tokenizer_result(tokenizer_res)
     lemmatizer_res = lemmatizer(tokenizer_res)
     set_lemmatizer_res(lemmatizer_res)
-    # print(stopwords.words('russian'))
-
-
-
-
